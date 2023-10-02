@@ -1,6 +1,6 @@
 ### app\widgets\GridView
 
-![Пример](docs/images/app-widgets-GridView.jpg)
+![Пример виджета GridView](yii2-snippets/docs/images/app-widgets-GridView.jpg)
 
 Добавлена возможность создавать многострочные заголовки. За это отвечает 
 атрибут `headers`. Каждый элемент массива атрибута `headers` имеет такую же
