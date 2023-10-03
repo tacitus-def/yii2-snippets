@@ -28,11 +28,12 @@ class GridView extends \yii\grid\GridView {
                     $idx = $col['column'];
                     /* @var $column Column */
                     $column = $this->columns[$idx];
-                    $column->headerOptions = array_merge($column->headerOptions, $col['headerOptions']);
+                    $options = array_merge($column->headerOptions, $col['headerOptions'] ?? []);
+                    $column->headerOptions = $options;
                 }
                 else {
                     $column = \Yii::createObject(array_merge([
-                        'class' => $this->dataColumnClass ? : DataColumn::className(),
+                        'class' => $this->dataColumnClass ? : DataColumn::class,
                         'grid' => $this,
                     ], $col));
                 }
