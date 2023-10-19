@@ -19,7 +19,7 @@ class JsHelper {
             if (!preg_match('/^[a-z_]+[a-z0-9-_]*$/i', $key)) {
                 continue;
             }
-            $js .= "window.jsVars.$key = " . (json_encode($value) ?: 'null') . ';';
+            $js .= "window.jsVars.{$key} = " . (json_encode($value) ?: 'null') . ';';
         }
         
         $view->registerJs($js, View::POS_HEAD);
