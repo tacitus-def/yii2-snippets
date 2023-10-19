@@ -41,4 +41,5 @@ GridView::widget([
 
 Хелпер для работы с js-кодом
 * JsHelper::setVars($view, $vars)
+
   Регистрирует в вьюхе `$view` js-скрипт с созданием переменных в `window.jsVars`, переданных в `$vars`.
