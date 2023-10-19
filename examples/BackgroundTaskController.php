@@ -42,7 +42,7 @@ class BaskgroundTaskController extends Controller {
             // Сбрасывает все запрошенные данные клиенту (из документации)
             fastcgi_finish_request();
             
-            // Ниже код задачи, которая должна испольняться в фоне
+            // Ниже код задачи, которая должна исполняться в фоне
             // ...
         }
         catch(\Exception $e) {
