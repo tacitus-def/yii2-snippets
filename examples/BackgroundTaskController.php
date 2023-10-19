@@ -18,10 +18,15 @@ class BaskgroundTaskController extends Controller {
     public function actionIndex($id) {
 
         // ...
+        
+        $data = [
 
+            // ...
+        
+        ];
         // Подписываемся на соответствующее событие для запуска задачи после отправки
         // всех данных клиенту
-        \Yii::$app->response->on(Response::EVENT_AFTER_SEND, [$this, 'afterSend'], $form);
+        \Yii::$app->response->on(Response::EVENT_AFTER_SEND, [$this, 'afterSend'], $data);
 
         // ...
 
