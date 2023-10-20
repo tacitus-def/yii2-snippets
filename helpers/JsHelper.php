@@ -14,7 +14,7 @@ class JsHelper {
      * @param array $vars
      */
     public static function setVars($view, $vars) {
-        $js = "if(!window.jsVars||typeof window.jsVars==='object'){window.jsVars={};}";
+        $js = "if((!window.jsVars)||typeof window.jsVars!=='object'){window.jsVars={};}";
         foreach ($vars as $key => $value) {
             if (!preg_match('/^[a-z_]+[a-z0-9-_]*$/i', $key)) {
                 continue;
