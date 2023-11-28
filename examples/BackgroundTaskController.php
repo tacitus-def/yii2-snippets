@@ -11,7 +11,7 @@ namespace app\controllers;
  *
  * @author demiurg
  */
-class BaskgroundTaskController extends Controller {
+class BaskgroundTaskController extends \yii\web\Controller {
 
     // ...
 
@@ -26,7 +26,7 @@ class BaskgroundTaskController extends Controller {
         ];
         // Подписываемся на соответствующее событие для запуска задачи после отправки
         // всех данных клиенту
-        \Yii::$app->response->on(Response::EVENT_AFTER_SEND, [$this, 'afterSend'], $data);
+        \Yii::$app->response->on(\yii\web\Response::EVENT_AFTER_SEND, [$this, 'afterSend'], $data);
 
         // ...
 
@@ -34,7 +34,7 @@ class BaskgroundTaskController extends Controller {
 
     // ...
 
-    public function afterSend(Event $event) {
+    public function afterSend(\yii\base\Event $event) {
         try {
             // Закрываем сессию
             session_write_close();
