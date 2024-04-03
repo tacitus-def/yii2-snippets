@@ -46,10 +46,13 @@ class JsExpr {
             break;
         case 'array':
             if (ArrayHelper::isIndexed($value)) {
-                $_value = '[' . join(', ', array_map(fn($value) => $this->_n7e($value), $value)) . ']';
+                $_cb = fn($value) => $this->_n7e($value);
+                $_value = '[' . join(', ', array_map($_cb, $value)) . ']';
             }
             else {
-                $_value = '{' . join(', ', array_map(fn($key, $value) => $this->_obj($key, $value), array_keys($value), array_values($value))) . '}';
+                $_cb = fn($key, $value) => $this->_obj($key, $value);
+                $_data = [array_keys($value), array_values($value)];
+                $_value = '{' . join(', ', array_map($_cb, ...$_data)) . '}';
             }
             break;
         default:
