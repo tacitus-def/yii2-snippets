@@ -21,16 +21,17 @@ class JsExpr {
         }
     }
 
-    public function n7e_obj($key, $value): string {
-        return $this->n7e($key) . ':' . $this->n7e($value);
+    protected function _obj($key, $value): string {
+        return $this->_n7e($key) . ':' . $this->_n7e($value);
     }
 
-    public function n7e($value): string {
+    protected function _n7e($value): string {
         $_value = null;
         $type = gettype($value);
         switch ($type) {
+        case 'object':
         case 'string':
-            $_value = "'" . addslashes($value) . "'";
+            $_value = "'" . addslashes(strval($value)) . "'";
             break;
         case 'integer':
         case 'float':
@@ -45,10 +46,10 @@ class JsExpr {
             break;
         case 'array':
             if (ArrayHelper::isIndexed($value)) {
-                $_value = '[' . join(', ', array_map([$this, 'n7e'], $value)) . ']';
+                $_value = '[' . join(', ', array_map(fn($value) => $this->_n7e($value), $value)) . ']';
             }
             else {
-                $_value = '{' . join(', ', array_map([$this, 'n7e_obj'], array_keys($value), array_values($value))) . '}';
+                $_value = '{' . join(', ', array_map(fn($key, $value) => $this->_obj($key, $value), array_keys($value), array_values($value))) . '}';
             }
             break;
         default:
@@ -97,7 +98,7 @@ class JsExpr {
             usort($matches[0], fn($a, $b) => $b[1] <=> $a[1]);
             foreach ($matches[0] as $match) {
                 list($name, $offset) = $match;
-                $value = $this->n7e($this->_bindings[$name]);
+                $value = $this->_n7e($this->_bindings[$name]);
                 $_expr = substr_replace($_expr, $value, $offset, strlen($name));
             }
 
