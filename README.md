@@ -45,12 +45,9 @@ GridView::widget([
 
   Регистрирует в вьюхе `$view` js-скрипт с созданием переменных в `window.jsVars`, переданных в `$vars`.
 
-### app\components\JsExpr
+### app\components\JsExpression
 
 Компонент выводит javascript-код с подстановкой именованных биндингов
 
-* `JsExpr::__construct(string $jsCode, array $bindings)`
-* `JsExpr::get(string $name)`
-* `JsExpr::set(string $name, $value): void`
-* `JsExpr::delete(string $name): void`
-* `JsExpr::__toString(): string`
+* `JsExpr::__construct(string $jsCode, array $bindings = [], array $config = [])`
+
