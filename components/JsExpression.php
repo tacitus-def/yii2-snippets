@@ -9,16 +9,9 @@ use yii\helpers\ArrayHelper;
  *
  * @author demiurg
  */
-class JsExpr {
-    protected $_expression = '';
-    protected $_bindings = [];
-    protected $_cached;
-
-    public function __construct(string $expression, array $bindings = []) {
-        $this->_expression = $expression;
-        foreach ($bindings as $name => $value) {
-            $this->set($name, $value);
-        }
+class JsExpression extends yii\web\JsExpression {
+    public function __construct(string $expression, array $bindings = [], array $config = []) {
+        parent::__construct($this->_bind($expression, $bindings), $config);
     }
 
     protected function _obj($key, $value): string {
@@ -61,40 +54,22 @@ class JsExpr {
         return $_value;
     }
 
-    public function get(string $name) {
-        return $this->_bindings[$name] ?? null;
-    }
-
-    public function set(string $name, $value): void {
-        if (substr($name, 0, 1) !== '$') {
-            throw new \Exception("The binding name must start with a dollar sign: {$name}");
-        }
-        $this->_cached = null;
-        $this->_bindings[$name] = $value;
-    }
-
-    public function delete(string $name): void {
-        $this->_cached = null;
-        unset($this->_bindings[$name]);
-    }
-
-    public function __toString(): string
+    protected function _bind($expression, $bindings): string
     {
         do {
-            if ($this->_cached !== null) {
+            if (!count($bindings)) {
                 break;
             }
-
-            $_expr = $this->_expression;
-
-            if (!count($this->_bindings)) {
-                $this->_cached = $_expr;
-                break;
-            }
-            $keys = array_map(fn($value) => '\\' . $value, array_keys($this->_bindings));
+            $callback = function ($name) {
+                if (substr($name, 0, 1) !== '$') {
+                    throw new \Exception("The binding name must start with a dollar sign: {$name}");
+                }
+                return '\\' . $name;
+            };
+            $keys = array_map($callback, array_keys($bindings));
             $pattern = "/" . join('|', $keys) . "/";
             $matches = [];
-            $res = preg_match_all($pattern, $_expr, $matches, PREG_OFFSET_CAPTURE);
+            $res = preg_match_all($pattern, $expression, $matches, PREG_OFFSET_CAPTURE);
             if (!$res) {
                 throw new \Exception('No one of the listed bindings was found in the expression');
             }
@@ -102,18 +77,16 @@ class JsExpr {
             foreach ($matches[0] as $match) {
                 list($name, $offset) = $match;
                 try {
-                    $value = $this->_n7e($this->_bindings[$name]);
-                    $_expr = substr_replace($_expr, $value, $offset, strlen($name));
+                    $value = $this->_n7e($bindings[$name]);
+                    $expression = substr_replace($expression, $value, $offset, strlen($name));
                 }
                 catch (\Exception $e) {
                     throw new \Exception("Raised error for binding: {$name}", 0, $e);
                 }
             }
-
-            $this->_cached = $_expr;
         }
         while (false);
 
-        return $this->_cached;
+        return $expression;
     }
 }
