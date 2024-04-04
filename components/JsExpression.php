@@ -9,7 +9,7 @@ use yii\helpers\ArrayHelper;
  *
  * @author demiurg
  */
-class JsExpression extends yii\web\JsExpression {
+class JsExpression extends \yii\web\JsExpression {
     public function __construct(string $expression, array $bindings = [], array $config = []) {
         parent::__construct($this->_bind($expression, $bindings), $config);
     }
