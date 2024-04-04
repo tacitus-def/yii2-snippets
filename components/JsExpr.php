@@ -56,7 +56,7 @@ class JsExpr {
             }
             break;
         default:
-            throw new \Exception("Unknown type of binding: $type");
+            throw new \Exception("Unknown type: {$type}");
         }
         return $_value;
     }
@@ -67,7 +67,7 @@ class JsExpr {
 
     public function set(string $name, $value): void {
         if (substr($name, 0, 1) !== ':') {
-            throw new \Exception('The binding name must start with a colon');
+            throw new \Exception("The binding name must start with a colon: {$name}");
         }
         $this->_cached = null;
         $this->_bindings[$name] = $value;
@@ -101,8 +101,13 @@ class JsExpr {
             usort($matches[0], fn($a, $b) => $b[1] <=> $a[1]);
             foreach ($matches[0] as $match) {
                 list($name, $offset) = $match;
-                $value = $this->_n7e($this->_bindings[$name]);
-                $_expr = substr_replace($_expr, $value, $offset, strlen($name));
+                try {
+                    $value = $this->_n7e($this->_bindings[$name]);
+                    $_expr = substr_replace($_expr, $value, $offset, strlen($name));
+                }
+                catch (\Exception $e) {
+                    throw new \Exception("Raised error for binding: {$name}", 0, $e);
+                }
             }
 
             $this->_cached = $_expr;
