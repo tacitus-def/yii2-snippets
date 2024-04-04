@@ -66,8 +66,8 @@ class JsExpr {
     }
 
     public function set(string $name, $value): void {
-        if (substr($name, 0, 1) !== ':') {
-            throw new \Exception("The binding name must start with a colon: {$name}");
+        if (substr($name, 0, 1) !== '$') {
+            throw new \Exception("The binding name must start with a dollar sign: {$name}");
         }
         $this->_cached = null;
         $this->_bindings[$name] = $value;
@@ -91,7 +91,7 @@ class JsExpr {
                 $this->_cached = $_expr;
                 break;
             }
-            $keys = array_keys($this->_bindings);
+            $keys = array_map(fn($value) => '\\' . $value, array_keys($this->_bindings));
             $pattern = "/" . join('|', $keys) . "/";
             $matches = [];
             $res = preg_match_all($pattern, $_expr, $matches, PREG_OFFSET_CAPTURE);
