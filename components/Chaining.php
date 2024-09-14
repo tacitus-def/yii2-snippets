@@ -11,7 +11,7 @@ class Chaining {
 
         public function __call($func, $args) {
                 list($callback, $position) = explode(':', $func) + [null, 0];
-                $data = array_merge(array_splice($args, 0, $position) ?? [], [$this->value], $args ?? []);
+                $data = array_merge(array_splice($args, 0, $position), [$this->value], $args);
                 $this->value = call_user_func_array($callback, $data);
 
                 return $this;
